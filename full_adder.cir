@@ -1,0 +1,41 @@
+**GDI FULL ADDER**
+.subckt gdi_full_adder C A B SUM CARRY
+**Stage 1: Process input B**
+m1 w4 B 0 0 nmod w=100u l=10u
+m2 w4 B vdd vdd pmod w=100u l=10u
+
+**Stage 2: Combine A with processed B**
+m3 w7 A w5 w5 pmod w=100u l=10u
+m4 w7 A w4 w4 nmod w=100u l=10u
+
+**Stage 3: Condition intermediate signal**
+m5 w9 w7 w8 w8 pmod w=100u l=10u
+m6 w9 w7 vss vss nmod w=100u l=10u
+
+**Stage 4: Generate SUM using C as selector**
+m7 SUM C w7 w7 pmod w=100u l=10u
+m8 SUM C w9 w9 nmod w=100u l=10u
+
+**Stage 5: Generate intermediate carry signal**
+m9 w11 C w9 w9 pmod w=100u l=10u
+m10 w11 w5 w9 w9 nmod w=100u l=10u
+
+**Stage 6: Buffer carry output via pass-inverter cell**
+xbuf CARRY w11 w12 pass_inv
+.ends gdi_full_adder
+
+**Pass-inverter subcircuit definition**
+.subckt pass_inv 1 2 3
+m1p 3 1 0 0 nmod w=100u l=10u
+m2p 3 1 2 2 pmod w=100u l=10u
+.ends pass_inv
+
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
+
+.tran 0.1m 400m
+.control
+run
+plot V(CARRY) V(SUM)
+.endc
+.end
