@@ -1,0 +1,24 @@
+** GDI HALF ADDER **
+.subckt gdi_half_adder A C B SUM CARRY
+** Buffer input A to generate intermediate node **
+m1 w3 A 0 0 pmod w=100u l=10u
+m2 w3 A vss vss nmod w=100u l=10u
+
+** SUM generation network **
+m3 SUM A B B pmod w=100u l=10u
+m4 SUM w3 B B nmod w=100u l=10u
+
+** CARRY generation network **
+m5 CARRY A vdd vdd pmod w=100u l=10u
+m6 CARRY C A A nmod w=100u l=10u
+.ends gdi_half_adder
+
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
+
+.tran 0.1m 400m
+.control
+run
+plot V(CARRY) V(SUM)
+.endc
+.end
