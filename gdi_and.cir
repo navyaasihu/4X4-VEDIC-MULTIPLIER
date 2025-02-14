@@ -1,0 +1,8 @@
+** GDI AND GATE NETLIST **
+.subckt gdi_and inA inB outAND
+m1 outAND inA vss vss nmod W=100u L=10u
+m2 outAND inB vdd vdd pmod W=100u L=10u
+.ends gdi_and
+
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
